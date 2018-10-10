@@ -18,14 +18,56 @@ class InvoiceCreate extends Component {
       items: this.state.items.concat({
         id: this.state.items.length,
         description: '',
-        currentType: '',
-        amount: 0.00,
+        currencyType: '',
+        amount: 0,
+        quantity: 1,
       })
     })
   }
 
-  handleOnChange = () => {
+  handleOnChangeAmount = (evt) => {
+    const index = evt.target.dataset.index;
+    let items = [...this.state.items];
+    items[index].amount = evt.target.value;
+    this.setState({
+      items
+    });
+  }
 
+  handleOnChangeCurrency = (evt) => {
+    const index = evt.target.dataset.index;
+    let items = [...this.state.items];
+    items[index].currency = evt.target.value;
+    this.setState({
+      items
+    });
+  }
+
+  handleOnChangeDescription = (evt) => {
+    const index = evt.target.dataset.index;
+    let items = [...this.state.items];
+    items[index].description = evt.target.value;
+    this.setState({
+      items
+    });
+  }
+
+  handleOnChangeQuantity = (evt) => {
+    const index = evt.target.dataset.index;
+    let items = [...this.state.items];
+    items[index].quantity = evt.target.value;
+    this.setState({
+      items
+    });
+  }
+
+  handleOnClickDeleteItem = (evt) => {
+    const index = evt.target.dataset.index;
+    let items = [...this.state.items];
+    items.splice(+index, 1);
+    this.setState({
+      items
+    });
   }
 
   selectClient = (evt) => {
@@ -87,28 +129,55 @@ class InvoiceCreate extends Component {
             </div>
             <div ref="two" className="hidden">
               {
-                this.state.items.map(item => {
+                this.state.items.map((item, i) => {
                   return (
-                    <div key={ item.id }>
+                    <div key={ item.id } className="flex-me small-pad vertical-align-center">
                       <input
-                        onChange={ this.handleOnChange }
+                        data-index={i}
+                        onChange={ this.handleOnChangeDescription }
                         className="item-description"
                         type="text"
                         placeholder="Description"
                         value={ item.description }
                       />
                       <input
-                        className="item-currency align-center"
+                        data-index={i}
+                        onChange={this.handleOnChangeCurrency}
+                        className="item-currency align-center pointer"
                         readOnly
                         type="text"
                         value={ this.state.options.currency || 'USD' }
                       />
                       <input
+                        data-index={i}
+                        onChange={this.handleOnChangeAmount}
                         className="item-amount"
                         type="number"
+                        autoComplete="off"
                         placeholder="0.00"
                         value={ item.amount }
+                        min="0.01"
+                        step="0.01"
                       />
+                      <div className="align-center">x</div>
+                      <input
+                        data-index={i}
+                        onChange={this.handleOnChangeQuantity}
+                        className="item-quantity"
+                        type="number"
+                        autoComplete="off"
+                        placeholder="1"
+                        value={ item.quantity }
+                        min=".01"
+                        step=".01"
+                      />
+                      <div
+                        data-index={i}
+                        className="align-center pointer"
+                        onClick={this.handleOnClickDeleteItem}
+                      >
+                        Del
+                      </div>
                     </div>
                   )
                 })
@@ -123,7 +192,7 @@ class InvoiceCreate extends Component {
             <h2>Invoice</h2>
             <p>Client: {this.state.selectedClient.clientName}</p>
             <p>Total: {this.state.items.reduce((acc, item) => {
-              return acc + item.amount;
+              return (parseFloat(Number(acc) + Number(item.amount)) * Number(item.quantity)).toFixed(2);
             }, 0) }</p>
             <button className="primary btn-lg">Save as Draft</button>
           </div>

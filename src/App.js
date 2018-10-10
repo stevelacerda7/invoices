@@ -31,12 +31,14 @@ class App extends Component {
               description: 'asdf',
               currentType: 'USD',
               amount: 35.00,
+              quantity: 1,
             },
             {
               id: 2,
               description: 'test',
               currentType: 'USD',
               amount: 20.00,
+              quantity: 1,
             }
           ]
         }
