@@ -10,6 +10,10 @@ import InvoiceCreate from './components/invoice/create';
 
 import './App.css';
 
+import { connect } from 'react-redux';
+
+import { newInvoiceAction } from './actions/invoices';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -58,6 +62,7 @@ class App extends Component {
       settings: {},
     }
   }
+
   render() {
     return (
       <Router>
@@ -100,4 +105,12 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  ...state
+});
+
+const mapDispatchToProps = dispatch => ({
+  simpleAction: () => dispatch(newInvoiceAction())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
