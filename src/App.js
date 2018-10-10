@@ -15,54 +15,6 @@ import { connect } from 'react-redux';
 import { newInvoiceAction } from './actions/invoices';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      invoices: [
-        {
-          id: '001',
-          clientName: 'Joe Smith',
-          clientEmail: 'jsmith@booboo.com',
-          total: 35.00,
-          currencyType: 'USD',
-          status: 'Paid',
-          sendDate: '10/2/18',
-          createdOn: '10/1/18',
-          items: [
-            {
-              id: 1,
-              description: 'asdf',
-              currentType: 'USD',
-              amount: 35.00,
-              quantity: 1,
-            },
-            {
-              id: 2,
-              description: 'test',
-              currentType: 'USD',
-              amount: 20.00,
-              quantity: 1,
-            }
-          ]
-        }
-      ],
-      clients: [
-        {
-          id: '10001',
-          clientName: 'Joe Smith',
-          clientEmail: 'jsmith@booboo.com',
-          clientAddress: '123 Boo St, San Jose, CA 95645',
-          defaultCurrency: 'USD',
-          defaultLanguage: 'English',
-          creditCard: '',
-        }
-      ],
-      subscriptions: [],
-      settings: {},
-    }
-  }
-
   render() {
     return (
       <Router>
@@ -79,15 +31,15 @@ class App extends Component {
           <div className="app">
             <Route
               exact path="/"
-              render={ (props) => <Invoice invoices={this.state.invoices} clients={this.state.clients} {...props} /> }
+              render={ (props) => <Invoice invoices={this.props.invoices} clients={this.props.clients} {...props} /> }
             />
             <Route
               exact path="/invoices"
-              render={ (props) => <Invoice invoices={this.state.invoices} clients={this.state.clients} {...props} /> }
+              render={ (props) => <Invoice invoices={this.props.invoices} clients={this.props.clients} {...props} /> }
             />
             <Route
               exact path="/invoices/create"
-              render={ (props) => <InvoiceCreate invoices={this.state.invoices} clients={this.state.clients} {...props} /> }
+              render={ (props) => <InvoiceCreate invoices={this.props.invoices} clients={this.props.clients} {...props} /> }
             />
             <Route
               exact path="/invoices/edit/:id"
@@ -110,7 +62,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  simpleAction: () => dispatch(newInvoiceAction())
+  newInvoiceAction: () => dispatch(newInvoiceAction())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
