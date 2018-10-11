@@ -37,17 +37,7 @@ let initialState = {
       ]
     }
   ],
-  clients: [
-    {
-      id: '10001',
-      clientName: 'Joe Smith',
-      clientEmail: 'jsmith@booboo.com',
-      clientAddress: '123 Boo St, San Jose, CA 95645',
-      defaultCurrency: 'USD',
-      defaultLanguage: 'English',
-      creditCard: '',
-    }
-  ],
+  clients: [],
   subscriptions: [],
   settings: {},
 }

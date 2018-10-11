@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Header from '../misc/header';
 
 
@@ -114,10 +115,9 @@ class Invoice extends Component {
         <div className="invoice-list">
           {
             this.state.shownInvoices.map(item => {
-              let linkTo = "/invoices/edit/" + item.id;
               return (
                 <div className="invoice-item small-pad border-bottom" key={item.id}>
-                  <Link to={linkTo}>
+                  <Link to={"/invoices/edit/" + item.id}>
                     <button className="invoice-item-status primary">{item.status}</button>
                     <div className="invoice-item-id-container">
                       <div className="invoice-item-id bold primary-font-color">Invoice #{item.id}</div>
@@ -148,4 +148,9 @@ class Invoice extends Component {
   }
 }
 
-export default Invoice;
+const mapStateToProps = (state) => ({
+  invoices: state.invoices,
+  clients: state.clients,
+})
+
+export default connect(mapStateToProps)(Invoice);

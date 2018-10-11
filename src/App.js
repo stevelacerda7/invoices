@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
+
 import Invoice from './components/invoice';
 import Subscription from './components/subscription';
-import Client from './components/client';
 import Logout from './components/logout';
 import Help from './components/help';
 import Settings from './components/settings';
 import InvoiceCreate from './components/invoice/create';
+import InvoiceEdit from './components/invoice/edit';
+import Client from './components/client';
+import ClientForm from './components/client/client-form';
 
 import './App.css';
 
 import { connect } from 'react-redux';
-
-import { newInvoiceAction } from './actions/invoices';
 
 class App extends Component {
   render() {
@@ -43,10 +45,12 @@ class App extends Component {
             />
             <Route
               exact path="/invoices/edit/:id"
-              render={(props) => <InvoiceCreate edit="true" {...props} />}
+              render={(props) => <InvoiceEdit invoices={this.props.invoices}{...props} />}
             />
             <Route exact path="/subscriptions" component={Subscription} />
             <Route exact path="/clients" component={Client} />
+            <Route exact path="/clients/create" component={ClientForm} />
+            <Route exact path="/clients/edit/:id" component={ClientForm} />
             <Route exact path="/settings" component={Settings} />
             <Route exact path="/help" component={Help} />
             <Route exact path="/logout" component={Logout} />
@@ -61,8 +65,4 @@ const mapStateToProps = state => ({
   ...state
 });
 
-const mapDispatchToProps = dispatch => ({
-  newInvoiceAction: () => dispatch(newInvoiceAction())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps)(App);

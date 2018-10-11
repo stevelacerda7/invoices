@@ -30,10 +30,11 @@ a {
 button, a, select {
   cursor: pointer;
 }
-input, select {
+input, select, textarea {
   border: 1px solid var(--secondary-color);
   border-radius: 2px;
   padding: 10px 5px;
+  resize: none;
 }
 
 /******* GENERICS ****************************/
@@ -158,6 +159,7 @@ button.primary {
   display: flex;
   justify-content: space-between;
   flex: 1 1 auto;
+  align-items: center;
 }
 .invoice-item .button-group {
   margin-left: 20px;
@@ -186,4 +188,10 @@ button.primary {
 }
 .item-quantity {
   width: 8%;
+}
+.save-tab-vertical {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 250px;
 }

@@ -2,16 +2,24 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from '../misc/header';
 
-class InvoiceCreate extends Component {
+class InvoiceEdit extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       selectedClient: {},
       selectedTab: "one",
-      items: [],
       options: {},
+      currentInvoice: {},
     }
+  }
+
+  componentWillMount = () => {
+    let invoice = this.props.invoices.find(item => item.id === this.props.match.params.id);
+    this.setState({
+      currentInvoice: invoice,
+      selectedClient: invoice,
+    });
   }
 
   handleAddItem = () => {
@@ -95,7 +103,7 @@ class InvoiceCreate extends Component {
   render = () => {
     return (
       <div>
-        <Header title="New Invoice" />
+        <Header title="Edit Invoice" />
         <div className="flex-me">
           <div>
             <div className="tab-header">
@@ -107,7 +115,7 @@ class InvoiceCreate extends Component {
               <div className="tab-form">
                 <div className="form-group">
                   <label>Client</label>
-                  <select onChange={ this.selectClient }>
+                  <select onChange={ this.selectClient } defaultValue={this.state.client.id}>
                     <option value=""></option>
                     {
                       this.props.clients.map(item => {
@@ -130,7 +138,7 @@ class InvoiceCreate extends Component {
             </div>
             <div ref="two" className="hidden">
               {
-                this.state.items.map((item, i) => {
+                this.state.currentInvoice.items.map((item, i) => {
                   return (
                     <div key={ item.id } className="flex-me small-pad vertical-align-center">
                       <input
@@ -191,8 +199,8 @@ class InvoiceCreate extends Component {
           </div>
           <div className="save-tab align-center">
             <h2>Invoice</h2>
-            <p>Client: {this.state.selectedClient.clientName}</p>
-            <p>Total: {this.state.items.reduce((acc, item) => {
+            <p>Client: {this.state.currentInvoice.clientName}</p>
+            <p>Total: {this.state.currentInvoice.items.reduce((acc, item) => {
               return (parseFloat(Number(acc) + Number(item.amount)) * Number(item.quantity)).toFixed(2);
             }, 0) }</p>
             <button className="primary btn-lg">Save as Draft</button>
@@ -208,4 +216,4 @@ const mapStateToProps = (state) => ({
   invoices: state.invoices,
 })
 
-export default connect(mapStateToProps)(InvoiceCreate);
+export default connect(mapStateToProps)(InvoiceEdit);
