@@ -12,4 +12,6 @@ export const DELETE_CLIENT = "DELETE_CLIENT";
 export const CURRENCIES = [
   { key: 'USD', value: 'United States Dollar' },
   { key: 'SGD', value: 'Singapore Dollar' },
-]
+];
+
+export const CLIENT_STATUS = [ 'Active', 'Deleted' ];

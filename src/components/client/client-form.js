@@ -1,117 +1,105 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Header from '../misc/header';
 import { CURRENCIES } from '../../constants';
+import { CLIENT_STATUS } from '../../constants';
+
+import { deleteClientAction, saveClientAction } from '../../actions/clients';
 
 class ClientForm extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       selectedClient: {},
-      selectedTab: "one",
-      items: [],
-      options: {},
     }
   }
 
-  handleAddItem = () => {
-    this.setState({
-      items: this.state.items.concat({
-        id: this.state.items.length,
-        description: '',
-        currencyType: '',
-        amount: 0,
-        quantity: 1,
-      })
-    })
+  componentWillMount = () => {
+    this.id = this.props.match.params.id || null;
+    if (this.props.clients.length <= 0) {
+      window.location = "/clients";
+    }
+    if (this.id) {
+      let client = this.props.clients.find(item => {
+        return item.id === this.props.match.params.id
+      });
+      this.setState({
+        selectedClient: client || {},
+      });
+    }
   }
 
-  handleOnChangeAmount = (evt) => {
-    const index = evt.target.dataset.index;
-    let items = [...this.state.items];
-    items[index].amount = evt.target.value;
-    this.setState({
-      items
-    });
-  }
-
-  handleOnChangeCurrency = (evt) => {
-    const index = evt.target.dataset.index;
-    let items = [...this.state.items];
-    items[index].currency = evt.target.value;
-    this.setState({
-      items
-    });
-  }
-
-  handleOnChangeDescription = (evt) => {
-    const index = evt.target.dataset.index;
-    let items = [...this.state.items];
-    items[index].description = evt.target.value;
-    this.setState({
-      items
-    });
-  }
-
-  handleOnChangeQuantity = (evt) => {
-    const index = evt.target.dataset.index;
-    let items = [...this.state.items];
-    items[index].quantity = evt.target.value;
-    this.setState({
-      items
-    });
-  }
-
-  handleOnClickDeleteItem = (evt) => {
-    const index = evt.target.dataset.index;
-    let items = [...this.state.items];
-    items.splice(+index, 1);
-    this.setState({
-      items
-    });
-  }
-
-  selectClient = (evt) => {
+  handleCcOnChange = evt => {
     const value = evt.target.value;
-    this.setState(prevState => {
-      return {
-        selectedClient: this.props.clients.find(item => {
-          return item.id === value;
-        }) || {},
-      }
-    })
+    const isGoodValue = /([0-9])/;
+    if (value.length > 0 && (!isGoodValue.test(value) || value.length > 16)) {
+      this.setState({
+        error: true,
+      });
+    } else {
+      this.setState({
+        error: false
+      });
+    }
+    let selectedClient = {...this.state.selectedClient};
+    selectedClient.creditCard = value;
+    this.setState({
+      selectedClient
+    });
   }
 
-  showTab = (num) => {
-    this.refs[this.state.selectedTab].classList.add('hidden');
-    this.refs["tab-" + this.state.selectedTab].classList.remove('selected');
-    this.refs[num].classList.remove('hidden');
-    this.refs["tab-" + num].classList.add('selected');
+  handleOnChange = evt => {
+    const value = evt.target.value;
+    const keyname = evt.target.dataset.keyname;
+    let selectedClient = {...this.state.selectedClient};
+    selectedClient[keyname] = value;
     this.setState({
-      selectedTab: num,
+      selectedClient
     });
+  }
+
+  deleteOnClick = (evt) => {
+    this.props.deleteClient(this.state.selectedClient.id);
+  }
+
+  saveOnClick = (evt) => {
+    this.props.saveClient(this.state.selectedClient.id);
   }
 
   render = () => {
-    const id = this.props.match.params.id || null;
     return (
       <div>
-        <Header title={id ? "Edit Client" : "New Client"} />
+        <Header title={this.id ? "Edit Client" : "New Client"} />
         <div className="flex-me">
           <div>
             <div className="small-pad">
               <div className="tab-form">
                 <div className="form-group">
                   <label>Name</label>
-                  <input type="text" value={ this.state.selectedClient.clientName || "" } />
+                  <input
+                    data-keyname="clientName"
+                    type="text"
+                    value={ this.state.selectedClient.clientName || "" }
+                    onChange={this.handleOnChange}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Email</label>
-                  <input type="email" value={ this.state.selectedClient.clientName || "" } />
+                  <input
+                    type="email"
+                    data-keyname="clientEmail"
+                    value={ this.state.selectedClient.clientEmail || "" }
+                    onChange={this.handleOnChange}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Address</label>
-                  <textarea rows="6" value={ this.state.selectedClient.clientName || "" } />
+                  <textarea
+                    data-keyname="clientAddress"
+                    rows="6"
+                    value={ this.state.selectedClient.clientAddress || "" }
+                    onChange={this.handleOnChange}
+                  />
                 </div>
                 <div className="form-group">
                   <label>Default Currency</label>
@@ -119,7 +107,27 @@ class ClientForm extends Component {
                     {
                       CURRENCIES.map(currency => {
                         return (
-                          <option key={ currency.key } value={ currency.key }>{currency.key + ' - ' + currency.value }</option>
+                          <option
+                            key={ currency.key }
+                            value={ currency.key }
+                          >
+                            {currency.key + ' - ' + currency.value }
+                          </option>
+                        )
+                      })
+                    }
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Status</label>
+                  <select
+                    onChange={ this.selectStatus }
+                    defaultValue={this.state.selectedClient.status ? this.state.selectedClient.status.toLowerCase() : ""}
+                  >
+                    {
+                      CLIENT_STATUS.map(status => {
+                        return (
+                          <option key={ status } value={ status.toLowerCase() }>{status}</option>
                         )
                       })
                     }
@@ -127,16 +135,35 @@ class ClientForm extends Component {
                 </div>
                 <div className="form-group">
                   <label>Credit Card</label>
-                  <input type="text" value={ this.state.selectedClient.clientEmail || ""} />
+                  <input
+                    type="text"
+                    data-keyname="creditCard"
+                    className={this.state.error ? "error" : ""}
+                    value={ this.state.selectedClient.creditCard}
+                    onChange={this.handleCcOnChange}
+                  />
                 </div>
               </div>
             </div>
           </div>
           <div className="save-tab align-center">
             <div className="flex-me save-tab-vertical vertical-align-center">
-              <button className="primary btn-lg margin-5px">Save</button>
+              <h3 className="client-status">{this.state.selectedClient.status}</h3>
+              <button
+                className={"primary btn-lg margin-5px" + (this.state.error ? " btn-disable" : "")}
+                onClick={this.saveOnClick}
+              >
+                Save
+              </button>
               {
-                id ? <button className="primary btn-lg margin-5px">Delete</button> : ""
+                this.id ?
+                  <button
+                    className={"primary btn-lg margin-5px" + (this.state.error ? " btn-disable" : "")}
+                    onClick={this.deleteOnClick}
+                  >
+                    Delete
+                  </button> :
+                  ""
               }
             </div>
           </div>
@@ -146,4 +173,13 @@ class ClientForm extends Component {
   }
 }
 
-export default ClientForm;
+const mapStateToProps = (state) => ({
+  clients: state.clients
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  deleteClient: (id) => dispatch(deleteClientAction(id)),
+  saveClient: (id) => dispatch(saveClientAction(id))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientForm);

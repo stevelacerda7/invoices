@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-
 import Invoice from './components/invoice';
 import Subscription from './components/subscription';
 import Logout from './components/logout';
@@ -22,7 +21,7 @@ class App extends Component {
       <Router>
         <div className="main-app">
           <div className="menu">
-            <Link to="/" className="menu-item"><div>Simple Invoices</div></Link>
+            <Link to="/" className="menu-item logo"><div>Simple Invoices</div></Link>
             <Link to="/invoices" className="menu-item"><div>Invoices</div></Link>
             <Link to="/subscriptions" className="menu-item"><div>Subscriptions</div></Link>
             <Link to="/clients" className="menu-item"><div>Clients</div></Link>
