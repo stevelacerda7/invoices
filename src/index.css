@@ -5,9 +5,13 @@
   --font-color-primary: #333;
   --font-color-secondary: #555;
   --light-bg: #f9f9f9;
-  --green-color: #41ce13;
+  --info-color: #41ce13;
   --disabled-color: #cccccc;
   --light-gray: #f5f5f5;
+  --warning-color: #ff7916;
+  --error-color: ##ff0000;
+  --seventy: 70%;
+  --thirty: 30%;
 }
 
 
@@ -16,7 +20,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+    sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--font-color-primary);
@@ -48,6 +52,9 @@ table tr:nth-child(even) {
 }
 table td {
   padding: 10px 5px;
+}
+.form-group select {
+  width: calc(var(--seventy) + 15px);
 }
 
 
@@ -115,10 +122,10 @@ button.primary {
 }
 .form-group > * {
   flex: 1 1 auto;
-  width: 70%;
+  width: var(--seventy);
 }
 .form-group label {
-  width: 30%;
+  width: var(--thirty);
   font-weight: bold;
 }
 .hidden {
@@ -211,6 +218,7 @@ button.primary {
 .item-currency {
   min-width: 50px;
   width: 10%;
+  padding: 8px 5px;
   background-color: var(--secondary-color);
 }
 .item-amount {
@@ -226,10 +234,56 @@ button.primary {
   align-items: center;
   height: 250px;
 }
+.save-tab button {
+  margin-top: 20px;
+}
 .table-link-container {
   justify-content: space-between;
 }
 .client-status {
   text-transform: capitalize;
-  color: var(--green-color);
+  color: var(--info-color);
+}
+.invoice-item-name-status {
+  text-transform: capitalize;
+  color: var(--info-color);
+}
+.invoice-item-name-status.deleted {
+  color: var(--warning-color);
+}
+.invoice-item-name-status.delinquent {
+  color: var(--error-color);
+}
+.invoice-item-status {
+  border: none;
+  color: #fff;
+  background-color: var(--primary-color);
+}
+.invoice-item-status.paid {
+  background-color: var(--info-color);
+}
+.invoice-item-status.sent {
+  background-color: var(--warning-color);
+}
+.invoice-item-status.refunded {
+  background-color: var(--primary-color);
+}
+.invoice-item-status.deleted {
+  background-color: var(--error-color);
+}
+.settings-list {
+  width: var(--seventy);
+}
+.settings-panel {
+  flex-direction: column;
+  width: var(--thirty);
+  margin-top: 30px;
+}
+.settings-panel > button {
+  margin: 10px;
+}
+.save-settings {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }

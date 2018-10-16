@@ -6,6 +6,7 @@ export default (prevState = {}, action) => {
       // save to db
       console.log('saved client');
       window.location = '/clients';
+      return prevState;
     case GET_ALL_CLIENTS:
       return [
         {
@@ -79,7 +80,7 @@ export default (prevState = {}, action) => {
           clientAddress: '123 Boo St, San Jose, CA 95645',
           defaultCurrency: 'USD',
           defaultLanguage: 'English',
-          creditCard: '',
+          creditCard: '1234123412341234',
           status: 'deleted',
           invoices: [
             {
@@ -142,6 +143,7 @@ export default (prevState = {}, action) => {
     case DELETE_CLIENT:
       console.log('deleted client');
       window.location = '/clients';
+      return prevState;
     default:
       return prevState;
   }

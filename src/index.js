@@ -9,34 +9,7 @@ import configureStore from './store';
 
 
 let initialState = {
-  invoices: [
-    {
-      id: '001',
-      clientName: 'Joe Smith',
-      clientEmail: 'jsmith@booboo.com',
-      total: 35.00,
-      currencyType: 'USD',
-      status: 'Paid',
-      sendDate: '10/2/18',
-      createdOn: '10/1/18',
-      items: [
-        {
-          id: 1,
-          description: 'asdf',
-          currentType: 'USD',
-          amount: 35.00,
-          quantity: 1,
-        },
-        {
-          id: 2,
-          description: 'test',
-          currentType: 'USD',
-          amount: 20.00,
-          quantity: 1,
-        }
-      ]
-    }
-  ],
+  invoices: [],
   clients: [],
   subscriptions: [],
   settings: {},

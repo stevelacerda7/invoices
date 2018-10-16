@@ -4,7 +4,7 @@ import Header from '../misc/header';
 import { CURRENCIES } from '../../constants';
 import { CLIENT_STATUS } from '../../constants';
 
-import { deleteClientAction, saveClientAction } from '../../actions/clients';
+import { deleteClientAction, saveClientAction, getAllClientsAction } from '../../actions/clients';
 
 class ClientForm extends Component {
   constructor(props) {
@@ -179,7 +179,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   deleteClient: (id) => dispatch(deleteClientAction(id)),
-  saveClient: (id) => dispatch(saveClientAction(id))
+  saveClient: (id) => dispatch(saveClientAction(id)),
+  getAllClientsAction: (id) => dispatch(getAllClientsAction(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientForm);
